@@ -50,7 +50,33 @@ class OpenTriviaDB(GObject.GObject):
         self.token = "123"
 
     def load_local_questions(self, path=None, shuffle=True):
-        ...
+        if path is None:
+        path = "questions.json"
+
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    except Exception as e:
+        print("Error leyendo el archivo:", e)
+        self.emit("connection-error")
+        return
+
+    self.questions = []
+
+    for item in data:
+        question = Question(
+            item["question"],
+            item["category"],
+            item["difficulty"],
+            item["type"],
+            item["correct_answer"],
+            item["incorrect_answers"]
+        )
+
+        self.questions.append(question)
+
+    if shuffle:
+        random.shuffle(self.questions)
         self.emit("questions-retrieved")
 
     def get_open_trivia_token(self):
