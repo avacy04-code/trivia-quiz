@@ -28,6 +28,7 @@ import html
 import random
 import threading
 import time
+import os
 
 class OpenTriviaDB(GObject.GObject):
     __gsignals__ = {
