@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Trivia</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 820px; margin: 30px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+    .meta { color:#666; font-size: 14px; margin-bottom: 10px; display:flex; gap:12px; flex-wrap:wrap; }
+    button { width:100%; padding: 12px 14px; margin: 8px 0; border-radius: 10px; border:1px solid #ccc; background:#fff; cursor:pointer; text-align:left; }
+    button:hover { background:#f6f6f6; }
+    .ok { border-color: #22c55e; background:#f0fdf4; }
+    .bad { border-color: #ef4444; background:#fef2f2; }
+    .top { display:flex; justify-content: space-between; align-items:center; gap:12px; margin-bottom: 12px; }
+    .score { font-weight: 600; }
+    .small { font-size: 13px; color:#666; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <h1 style="margin:0;">Trivia</h1>
+    <div class="score">Puntos: <span id="score">0</span> <span class="small">(Pregunta <span id="idx">0</span>/<span id="total">0</span>)</span></div>
+  </div>
+
+  <div class="card">
+    <div class="meta">
+      <div>Categoría: <span id="cat">-</span></div>
+      <div>Dificultad: <span id="diff">-</span></div>
+      <div>Tipo: <span id="type">-</span></div>
+    </div>
+    <h2 id="q" style="margin-top:0;">Cargando…</h2>
+    <div id="answers"></div>
+    <button id="next" style="display:none; text-align:center;">Siguiente</button>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
