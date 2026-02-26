@@ -1,0 +1,12 @@
+[
+  {
+    "question": "¿Cuál es la capital de Francia?",
+    "correct_answer": "París",
+    "incorrect_answers": ["Roma", "Madrid", "Berlín"]
+  },
+  {
+    "question": "¿Cuánto es 5 x 6?",
+    "correct_answer": "30",
+    "incorrect_answers": ["25", "35", "40"]
+  }
+]
