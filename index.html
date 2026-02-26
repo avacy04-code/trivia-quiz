@@ -2,30 +2,30 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Trivial con Premios</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Trivia Quiz</title>
+    <link rel="stylesheet" href="data/style.css">
 </head>
 <body>
 
 <div class="game-container">
-    <h1>🎮 Trivial Game</h1>
+    <h1>🎮 Trivia Quiz</h1>
 
     <div class="status">
-        <span>❤️ Vidas: <b id="lives">3</b></span>
-        <span>⭐ Nivel: <b id="level">1</b></span>
-        <span>⏱ Tiempo: <b id="timer">15</b>s</span>
+        <span>❤️ <b id="lives">3</b></span>
+        <span>⭐ Nivel <b id="level">1</b></span>
+        <span>⏱ <b id="timer">15</b>s</span>
     </div>
 
     <div class="score">Puntos: <span id="score">0</span></div>
 
-    <div class="question" id="question"></div>
-    <div class="answers" id="answers"></div>
+    <div id="question"></div>
+    <div id="answers"></div>
 
-    <div class="reward" id="reward"></div>
+    <div id="reward" class="reward"></div>
 
-    <button class="restart" id="restart">Reiniciar Juego</button>
+    <button id="restart">Reiniciar</button>
 </div>
 
-<script src="script.js"></script>
+<script src="app.js"></script>
 </body>
 </html>
