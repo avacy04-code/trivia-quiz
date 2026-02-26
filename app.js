@@ -1,102 +1,133 @@
-let questions = [];
-let current = 0;
-let score = 0;
-let locked = false;
+let gameState = JSON.parse(localStorage.getItem("triviaState")) || {
+    score: 0,
+    level: 1,
+    lives: 3,
+    coins: 0
+};
 
-const $ = (id) => document.getElementById(id);
+let questionsData = null;
+let currentQuestion = 0;
+let timer = 0;
+let interval = null;
 
-function shuffle(arr) {
-  for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
-  }
-  return arr;
+// UI
+const scoreEl = document.getElementById("score");
+const livesEl = document.getElementById("lives");
+const levelEl = document.getElementById("level");
+const timerEl = document.getElementById("timer");
+const questionEl = document.getElementById("question");
+const answersEl = document.getElementById("answers");
+const rewardEl = document.getElementById("reward");
+const restartBtn = document.getElementById("restart");
+
+// ====== CARGA DE PREGUNTAS ======
+fetch("questions.json")
+    .then(r => r.json())
+    .then(data => {
+        questionsData = data.levels;
+        updateUI();
+        loadQuestion();
+    });
+
+// ====== FUNCIONES ======
+function saveState() {
+    localStorage.setItem("triviaState", JSON.stringify(gameState));
 }
 
-function normalizeQuestion(q) {
-  // Acepta tu formato estilo OpenTDB:
-  // {question, category, difficulty, type, correct_answer, incorrect_answers}
-  const answers = [q.correct_answer, ...(q.incorrect_answers || [])];
-  return {
-    question: q.question,
-    category: q.category || "Custom",
-    difficulty: q.difficulty || "medium",
-    type: q.type || "multiple",
-    correct: q.correct_answer,
-    answers: shuffle(answers.slice())
-  };
+function updateUI() {
+    scoreEl.textContent = gameState.score;
+    livesEl.textContent = gameState.lives;
+    levelEl.textContent = gameState.level;
 }
 
-function render() {
-  const q = questions[current];
-  $("q").textContent = q.question;
-  $("cat").textContent = q.category;
-  $("diff").textContent = q.difficulty;
-  $("type").textContent = q.type;
-  $("score").textContent = String(score);
-  $("idx").textContent = String(current + 1);
-  $("total").textContent = String(questions.length);
+function startTimer(seconds) {
+    clearInterval(interval);
+    timer = seconds;
+    timerEl.textContent = timer;
 
-  const box = $("answers");
-  box.innerHTML = "";
-  locked = false;
-  $("next").style.display = "none";
-
-  q.answers.forEach(ans => {
-    const btn = document.createElement("button");
-    btn.textContent = ans;
-    btn.addEventListener("click", () => choose(btn, ans));
-    box.appendChild(btn);
-  });
+    interval = setInterval(() => {
+        timer--;
+        timerEl.textContent = timer;
+        if (timer <= 0) loseLife();
+    }, 1000);
 }
 
-function choose(btn, ans) {
-  if (locked) return;
-  locked = true;
+function loadQuestion() {
+    answersEl.innerHTML = "";
+    rewardEl.style.display = "none";
 
-  const q = questions[current];
-  const buttons = Array.from($("answers").querySelectorAll("button"));
+    const levelData = questionsData[gameState.level - 1];
 
-  buttons.forEach(b => {
-    if (b.textContent === q.correct) b.classList.add("ok");
-  });
+    if (!levelData || currentQuestion >= levelData.questions.length) {
+        nextLevel();
+        return;
+    }
 
-  if (ans === q.correct) {
-    score += 1;
-    btn.classList.add("ok");
-  } else {
-    btn.classList.add("bad");
-  }
+    const q = levelData.questions[currentQuestion];
+    questionEl.textContent = q.question;
 
-  $("score").textContent = String(score);
-  $("next").style.display = "block";
+    q.answers.forEach((a, i) => {
+        const btn = document.createElement("button");
+        btn.textContent = a;
+        btn.onclick = () => checkAnswer(i, q.correct);
+        answersEl.appendChild(btn);
+    });
+
+    startTimer(levelData.time);
 }
 
-$("next").addEventListener("click", () => {
-  current += 1;
-  if (current >= questions.length) {
-    $("q").textContent = `Fin 🎉 Puntuación: ${score}/${questions.length}`;
-    $("answers").innerHTML = "";
-    $("next").style.display = "none";
-    return;
-  }
-  render();
-});
+function checkAnswer(selected, correct) {
+    clearInterval(interval);
 
-async function start() {
-  // IMPORTANTE: esto funciona si lo sirves con un servidor (no abriendo el HTML con doble clic)
-  const res = await fetch("./questions.json");
-  const raw = await res.json();
+    if (selected === correct) {
+        gameState.score += 10;
+        gameState.coins += 5;
+        currentQuestion++;
+    } else {
+        loseLife();
+        return;
+    }
 
-  questions = raw.map(normalizeQuestion);
-  shuffle(questions);
-  current = 0;
-  score = 0;
-
-  render();
+    saveState();
+    updateUI();
+    loadQuestion();
 }
 
-start().catch(err => {
-  $("q").textContent = "Error cargando questions.json (¿lo estás abriendo sin servidor?)";
-  $("answers").innerHTML = `<pre style="white-space:pre-wrap;color:#b91c1c;">${String(err)}</pre>`;
-});
+function loseLife() {
+    clearInterval(interval);
+    gameState.lives--;
+
+    if (gameState.lives <= 0) {
+        endGame();
+    } else {
+        currentQuestion++;
+        saveState();
+        updateUI();
+        loadQuestion();
+    }
+}
+
+function nextLevel() {
+    gameState.level++;
+    currentQuestion = 0;
+
+    rewardEl.textContent = "🎁 Premio: +50 monedas";
+    rewardEl.style.display = "block";
+    gameState.coins += 50;
+
+    saveState();
+    updateUI();
+    loadQuestion();
+}
+
+function endGame() {
+    questionEl.textContent = "💀 Juego terminado";
+    answersEl.innerHTML = "";
+    restartBtn.style.display = "block";
+    saveState();
+}
+
+restartBtn.onclick = () => {
+    localStorage.removeItem("triviaState");
+    location.reload();
+};
