@@ -1,39 +1,173 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Trivia</title>
-  <style>
-    body { font-family: system-ui, -apple-system, sans-serif; max-width: 820px; margin: 30px auto; padding: 0 16px; }
-    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
-    .meta { color:#666; font-size: 14px; margin-bottom: 10px; display:flex; gap:12px; flex-wrap:wrap; }
-    button { width:100%; padding: 12px 14px; margin: 8px 0; border-radius: 10px; border:1px solid #ccc; background:#fff; cursor:pointer; text-align:left; }
-    button:hover { background:#f6f6f6; }
-    .ok { border-color: #22c55e; background:#f0fdf4; }
-    .bad { border-color: #ef4444; background:#fef2f2; }
-    .top { display:flex; justify-content: space-between; align-items:center; gap:12px; margin-bottom: 12px; }
-    .score { font-weight: 600; }
-    .small { font-size: 13px; color:#666; }
-  </style>
+    <meta charset="UTF-8">
+    <title>Trivial con Premios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .game-container {
+            background: white;
+            width: 400px;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .score {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .answers button {
+            display: block;
+            width: 100%;
+            margin: 8px 0;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #4facfe;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .answers button:hover {
+            background: #00c6ff;
+        }
+
+        .reward {
+            margin-top: 15px;
+            padding: 10px;
+            background: #d4edda;
+            color: #155724;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .restart {
+            margin-top: 15px;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            background: #ff7675;
+            color: white;
+            cursor: pointer;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <div class="top">
-    <h1 style="margin:0;">Trivia</h1>
-    <div class="score">Puntos: <span id="score">0</span> <span class="small">(Pregunta <span id="idx">0</span>/<span id="total">0</span>)</span></div>
-  </div>
 
-  <div class="card">
-    <div class="meta">
-      <div>Categoría: <span id="cat">-</span></div>
-      <div>Dificultad: <span id="diff">-</span></div>
-      <div>Tipo: <span id="type">-</span></div>
-    </div>
-    <h2 id="q" style="margin-top:0;">Cargando…</h2>
-    <div id="answers"></div>
-    <button id="next" style="display:none; text-align:center;">Siguiente</button>
-  </div>
+<div class="game-container">
+    <h1>🎯 Trivial</h1>
+    <div class="score">Puntos: <span id="score">0</span></div>
+    <div class="question" id="question"></div>
+    <div class="answers" id="answers"></div>
+    <div class="reward" id="reward"></div>
+    <button class="restart" id="restart" onclick="restartGame()">Reiniciar</button>
+</div>
 
-  <script src="app.js"></script>
+<script>
+    const questions = [
+        {
+            question: "¿Cuál es la capital de Francia?",
+            answers: ["Roma", "Madrid", "París", "Berlín"],
+            correct: 2
+        },
+        {
+            question: "¿Cuánto es 5 x 6?",
+            answers: ["30", "25", "20", "35"],
+            correct: 0
+        },
+        {
+            question: "¿Qué lenguaje se usa para estilos web?",
+            answers: ["HTML", "Python", "CSS", "Java"],
+            correct: 2
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const scoreEl = document.getElementById("score");
+    const rewardEl = document.getElementById("reward");
+    const restartBtn = document.getElementById("restart");
+
+    function loadQuestion() {
+        answersEl.innerHTML = "";
+        const q = questions[currentQuestion];
+        questionEl.textContent = q.question;
+
+        q.answers.forEach((answer, index) => {
+            const btn = document.createElement("button");
+            btn.textContent = answer;
+            btn.onclick = () => checkAnswer(index);
+            answersEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(index) {
+        if (index === questions[currentQuestion].correct) {
+            score += 10;
+            scoreEl.textContent = score;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            endGame();
+        }
+    }
+
+    function endGame() {
+        questionEl.textContent = "🎉 Juego terminado";
+        answersEl.innerHTML = "";
+        restartBtn.style.display = "block";
+
+        if (score >= 20) {
+            rewardEl.textContent = "🏆 Recompensa desbloqueada: ¡Cupón de descuento!";
+        } else {
+            rewardEl.textContent = "🎁 Sigue jugando para ganar recompensas";
+        }
+
+        rewardEl.style.display = "block";
+    }
+
+    function restartGame() {
+        currentQuestion = 0;
+        score = 0;
+        scoreEl.textContent = score;
+        rewardEl.style.display = "none";
+        restartBtn.style.display = "none";
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+
 </body>
 </html>
