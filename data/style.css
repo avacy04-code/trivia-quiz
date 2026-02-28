@@ -1,195 +1,91 @@
-/* =========================
-   RESET Y BASE
-========================= */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
 body {
-    font-family: "Segoe UI", Arial, sans-serif;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #a8e063, #56ab2f);
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    background-image: url('../img/fondo.png');
     background-size: cover;
+    background-attachment: fixed;
     background-position: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background-image 0.8s ease-in-out;
 }
 
-/* =========================
-   OVERLAY USUARIO
-========================= */
-.overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.55);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
+.oculto {
+    display: none;
 }
 
-.card {
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 320px;
+.textbox {
+    padding: 8px;
+    border: 1px #d2d0d0 solid;
+    border-radius: 3px;  
+    width: 50%;
+}
+
+.btn {
+    padding: 8px 15px;
+    cursor: pointer;
+    border: 0px;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn.blue {
+    background: rgb(185, 12, 99);
+    color: #fff;
+}
+
+.box {
+    width: 70%;
+    margin: 100px auto;
     text-align: center;
-    animation: fadeIn 0.6s ease;
-}
-
-.card input {
-    width: 100%;
-    padding: 10px;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-/* =========================
-   CONTENEDOR JUEGO
-========================= */
-.game-container {
-    background: rgba(255, 255, 255, 0.95);
-    width: 100%;
-    max-width: 420px;
+    border: 1px solid rgb(185, 12, 99);
     padding: 20px;
-    border-radius: 20px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-    animation: slideUp 0.6s ease;
-}
-
-/* =========================
-   TEXTOS
-========================= */
-h1 {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.status {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
-    margin-bottom: 10px;
-}
-
-.score {
-    text-align: center;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
-
-.question {
-    font-size: 18px;
-    margin: 15px 0;
-    text-align: center;
-}
-
-/* =========================
-   RESPUESTAS
-========================= */
-.answers button {
-    width: 100%;
-    padding: 12px;
-    margin: 6px 0;
+    background: #fff;
     border-radius: 10px;
-    border: none;
-    background: #56ab2f;
-    color: white;
-    font-size: 15px;
+    opacity: 0.7;
+}
+
+.lblopc {
+    margin: 0 auto;
     cursor: pointer;
-    transition: transform 0.2s ease, background 0.3s ease;
 }
 
-.answers button:hover {
-    transform: scale(1.04);
-    background: #4c9a29;
+#divrpta {
+    color: #fff;
+    padding: 10px 10px;
+    border-radius: 3px;
 }
 
-/* =========================
-   EFECTOS RESPUESTA
-========================= */
-.correct {
-    animation: correctAnim 0.4s ease;
+.correcto {
+    background: green;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 10px;
+    border-radius: 3px;
 }
 
-@keyframes correctAnim {
-    0% { background: #48bb78; }
-    100% { background: #56ab2f; }
+.incorrecto {
+    background: red;
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 10px;
+    border-radius: 3px;
 }
 
-.wrong {
-    animation: wrongAnim 0.4s ease;
+.separador {
+    margin-top: 40px;
+    border-top: 1px solid rgb(185, 12, 99);
+    padding-top: 20px;
 }
 
-@keyframes wrongAnim {
-    0% { background: #f56565; }
-    100% { background: #56ab2f; }
-}
-
-/* =========================
-   RECOMPENSAS / RANKING
-========================= */
-.reward {
-    margin-top: 15px;
-    padding: 12px;
-    background: #e6fffa;
-    color: #065f46;
-    border-radius: 10px;
-    text-align: center;
-    animation: fadeIn 0.4s ease;
-}
-
-/* =========================
-   BOTONES
-========================= */
-button {
-    background: #56ab2f;
-    color: white;
-    border: none;
+#timer {
+    color:rgb(185, 12, 99);
     padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-}
-
-button:hover {
-    background: #4c9a29;
-}
-
-.restart {
-    width: 100%;
-    margin-top: 15px;
-    background: #e53e3e;
-}
-
-.restart:hover {
-    background: #c53030;
-}
-
-/* =========================
-   ANIMACIONES
-========================= */
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
-
-/* =========================
-   RESPONSIVE
-========================= */
-@media (max-width: 480px) {
-    .game-container {
-        border-radius: 0;
-        height: 100vh;
-    }
+    font-size: 20px;
+    border-radius: 30px;
+    border: 3px solid black;
+    width: 26px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0 auto;
 }
