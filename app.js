@@ -1,173 +1,88 @@
-/* =========================
-   ESTADO DEL JUEGO
-========================= */
-
-let state = JSON.parse(localStorage.getItem("triviaState")) || {
-    score: 0,
-    level: 1,
-    lives: 3,
-    coins: 0
-};
-
-let questionsData = [];
-let currentQuestionIndex = 0;
-let timer = 0;
-let timerInterval = null;
-
-/* =========================
-   ELEMENTOS DEL DOM
-========================= */
-
-const scoreEl = document.getElementById("score");
-const livesEl = document.getElementById("lives");
-const levelEl = document.getElementById("level");
-const timerEl = document.getElementById("timer");
-const questionEl = document.getElementById("question");
-const answersEl = document.getElementById("answers");
-const rewardEl = document.getElementById("reward");
-const restartBtn = document.getElementById("restart");
-
-/* =========================
-   CARGA DE PREGUNTAS
-========================= */
-
-fetch("questions.json")
-    .then(response => response.json())
-    .then(data => {
-        questionsData = data.levels;
-        updateUI();
-        loadQuestion();
-    })
-    .catch(error => {
-        questionEl.textContent = "❌ Error cargando preguntas";
-        console.error(error);
-    });
-
-/* =========================
-   FUNCIONES PRINCIPALES
-========================= */
-
-function saveState() {
-    localStorage.setItem("triviaState", JSON.stringify(state));
-}
-
-function updateUI() {
-    scoreEl.textContent = state.score;
-    livesEl.textContent = state.lives;
-    levelEl.textContent = state.level;
-}
-
-function startTimer(seconds) {
-    clearInterval(timerInterval);
-    timer = seconds;
-    timerEl.textContent = timer;
-
-    timerInterval = setInterval(() => {
-        timer--;
-        timerEl.textContent = timer;
-
-        if (timer <= 0) {
-            loseLife();
+{
+  "levels": [
+    {
+      "level": 1,
+      "time": 15,
+      "questions": [
+        {
+          "question": "¿Cuántos vasos de agua se recomienda beber al día?",
+          "answers": ["2–3 vasos", "4–5 vasos", "6–8 vasos"],
+          "correct": 2
+        },
+        {
+          "question": "¿Cuál es una fruta saludable?",
+          "answers": ["Manzana", "Caramelo", "Patatas fritas"],
+          "correct": 0
+        },
+        {
+          "question": "¿Qué hábito es bueno para empezar el día?",
+          "answers": ["Desayunar", "No comer nada", "Beber refrescos"],
+          "correct": 0
         }
-    }, 1000);
-}
-
-function loadQuestion() {
-    clearInterval(timerInterval);
-    answersEl.innerHTML = "";
-    rewardEl.style.display = "none";
-
-    const levelData = questionsData[state.level - 1];
-
-    // No hay más niveles
-    if (!levelData) {
-        endGame(true);
-        return;
+      ]
+    },
+    {
+      "level": 2,
+      "time": 12,
+      "questions": [
+        {
+          "question": "¿Cuántos minutos de ejercicio se recomiendan al día?",
+          "answers": ["10 minutos", "30 minutos", "2 horas"],
+          "correct": 1
+        },
+        {
+          "question": "¿Cuál es un alimento rico en proteínas?",
+          "answers": ["Pollo", "Golosinas", "Refresco"],
+          "correct": 0
+        },
+        {
+          "question": "¿Qué es mejor para la salud?",
+          "answers": ["Caminar", "Estar sentado todo el día", "Dormir poco"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "level": 3,
+      "time": 10,
+      "questions": [
+        {
+          "question": "¿Cuántas horas se recomienda dormir cada noche?",
+          "answers": ["4–5 horas", "6–8 horas", "10–12 horas"],
+          "correct": 1
+        },
+        {
+          "question": "¿Qué ayuda a reducir el estrés?",
+          "answers": ["Actividad física", "Comer comida rápida", "No descansar"],
+          "correct": 0
+        },
+        {
+          "question": "¿Cuál es una bebida saludable?",
+          "answers": ["Agua", "Refresco", "Bebida energética"],
+          "correct": 0
+        }
+      ]
+    },
+    {
+      "level": 4,
+      "time": 8,
+      "questions": [
+        {
+          "question": "¿Qué hábito mejora la salud mental?",
+          "answers": ["Dormir bien", "Usar el móvil toda la noche", "No hablar con nadie"],
+          "correct": 0
+        },
+        {
+          "question": "¿Qué es mejor para una dieta equilibrada?",
+          "answers": ["Comer variado", "Comer solo dulces", "Saltarse comidas"],
+          "correct": 0
+        },
+        {
+          "question": "¿Qué actividad ayuda al corazón?",
+          "answers": ["Caminar o correr", "Ver televisión", "Dormir todo el día"],
+          "correct": 0
+        }
+      ]
     }
-
-    // Nivel completado
-    if (currentQuestionIndex >= levelData.questions.length) {
-        nextLevel();
-        return;
-    }
-
-    const q = levelData.questions[currentQuestionIndex];
-    questionEl.textContent = q.question;
-
-    q.answers.forEach((answer, index) => {
-        const button = document.createElement("button");
-        button.textContent = answer;
-        button.onclick = () => checkAnswer(index, q.correct);
-        answersEl.appendChild(button);
-    });
-
-    startTimer(levelData.time);
+  ]
 }
-
-function checkAnswer(selected, correct) {
-    clearInterval(timerInterval);
-
-    if (selected === correct) {
-        state.score += 10;
-        state.coins += 5;
-        currentQuestionIndex++;
-    } else {
-        loseLife();
-        return;
-    }
-
-    saveState();
-    updateUI();
-    loadQuestion();
-}
-
-function loseLife() {
-    clearInterval(timerInterval);
-    state.lives--;
-
-    if (state.lives <= 0) {
-        endGame(false);
-    } else {
-        currentQuestionIndex++;
-        saveState();
-        updateUI();
-        loadQuestion();
-    }
-}
-
-function nextLevel() {
-    state.level++;
-    currentQuestionIndex = 0;
-
-    // Premio por nivel
-    state.coins += 50;
-    rewardEl.textContent = "🎁 Premio desbloqueado: +50 monedas";
-    rewardEl.style.display = "block";
-
-    saveState();
-    updateUI();
-    loadQuestion();
-}
-
-function endGame(completedAllLevels) {
-    clearInterval(timerInterval);
-    answersEl.innerHTML = "";
-    restartBtn.style.display = "block";
-
-    if (completedAllLevels) {
-        questionEl.textContent = "🏆 ¡Has completado todos los niveles!";
-    } else {
-        questionEl.textContent = "💀 Juego terminado";
-    }
-
-    saveState();
-}
-
-/* =========================
-   REINICIAR JUEGO
-========================= */
-
-restartBtn.onclick = () => {
-    localStorage.removeItem("triviaState");
-    location.reload();
-};
