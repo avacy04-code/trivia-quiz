@@ -2,30 +2,67 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Trivia Quiz</title>
+    <title>Trivia Quiz - Vida Saludable</title>
+
+    <!-- Estilos -->
     <link rel="stylesheet" href="data/style.css">
+
+    <!-- Meta opcional -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 
-<div class="game-container">
-    <h1>🎮 Trivia Quiz</h1>
-
-    <div class="status">
-        <span>❤️ <b id="lives">3</b></span>
-        <span>⭐ Nivel <b id="level">1</b></span>
-        <span>⏱ <b id="timer">15</b>s</span>
+<!-- =========================
+     PANTALLA DE USUARIO
+========================= -->
+<div id="user-screen" class="overlay">
+    <div class="card">
+        <h2>👤 Bienvenido</h2>
+        <p>Introduce tu nombre para comenzar</p>
+        <input type="text" id="username" placeholder="Tu nombre">
+        <button id="startGame">Empezar</button>
     </div>
-
-    <div class="score">Puntos: <span id="score">0</span></div>
-
-    <div id="question"></div>
-    <div id="answers"></div>
-
-    <div id="reward" class="reward"></div>
-
-    <button id="restart">Reiniciar</button>
 </div>
 
+<!-- =========================
+     JUEGO
+========================= -->
+<div class="game-container" id="game" style="display:none;">
+
+    <h1>🌱 Trivia Vida Saludable</h1>
+
+    <!-- ESTADO -->
+    <div class="status">
+        <span>❤️ Vidas: <b id="lives">3</b></span>
+        <span>⭐ Nivel: <b id="level">1</b></span>
+        <span>⏱ Tiempo: <b id="timer">15</b>s</span>
+    </div>
+
+    <!-- PUNTOS -->
+    <div class="score">
+        🏆 Puntos: <span id="score">0</span>
+    </div>
+
+    <!-- PREGUNTA -->
+    <div id="question" class="question"></div>
+
+    <!-- RESPUESTAS -->
+    <div id="answers" class="answers"></div>
+
+    <!-- MENSAJES / PREMIOS / RANKING -->
+    <div id="reward" class="reward"></div>
+
+    <!-- BOTÓN REINICIO -->
+    <button id="restart" class="restart" style="display:none;">
+        🔄 Reiniciar Juego
+    </button>
+
+</div>
+
+<!-- =========================
+     SCRIPT PRINCIPAL
+========================= -->
 <script src="app.js"></script>
+
 </body>
 </html>
