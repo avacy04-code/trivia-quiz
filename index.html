@@ -2,62 +2,96 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Trivia Quiz - Vida Saludable</title>
-    <link rel="stylesheet" href="data/style.css">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRIVIA</title>
+    <link rel="shortcut icon" href="img/favicon.ico">
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
-<!-- =========================
-     PANTALLA DE USUARIO
-========================= -->
-<div id="user-screen" class="overlay">
-    <div class="card">
-        <h2>👤 Bienvenido</h2>
-        <p>Introduce tu nombre para comenzar</p>
-        <input type="text" id="username" placeholder="Tu nombre">
-        <button id="startGame">Empezar</button>
-    </div>
-</div>
+    <div id="inicio" class="box">
 
-<!-- =========================
-     JUEGO
-========================= -->
-<div class="game-container" id="game" style="display:none;">
+        <h2>TRIVIA</h2>
 
-    <h1>🌱 Trivia Vida Saludable</h1>
+        <p>
+            ¿Cuál es tu nombre?
+        </p>
+        <p>
+            <input type="text" id="txtNombre" class="textbox" placeholder="Ingresa tu nombre">
+        </p>
+        <p>
+            <button class="btn blue" onclick="validarNombre()" >ENTRAR</button>
+        </p>
 
-    <!-- ESTADO -->
-    <div class="status">
-        <span>❤️ Vidas: <b id="lives">3</b></span>
-        <span>⭐ Nivel: <b id="level">1</b></span>
-        <span>⏱ Tiempo: <b id="timer">15</b>s</span>
+
     </div>
 
-    <!-- PUNTOS -->
-    <div class="score">
-        🏆 Puntos: <span id="score">0</span>
+    <div id="categoria" class="box oculto">
+
+        <h2 id="msgHola"></h2>
+
+        <h3>Selecciona una categoría:</h3>
+        
+        <p>
+            <button class="btn blue" onclick="cargarPreguntasTipo('A')" >PELÍCULAS</button>
+        </p>
+
+        <p>
+            <button class="btn blue" onclick="cargarPreguntasTipo('B')" >GEOGRAFÍA</button>
+        </p>
     </div>
 
-    <!-- PREGUNTA -->
-    <div id="question" class="question"></div>
+    <div id="jugar" class="box oculto">
 
-    <!-- RESPUESTAS -->
-    <div id="answers" class="answers"></div>
+        <div id="timer"></div>
 
-    <!-- MENSAJES / PREMIOS / RANKING -->
-    <div id="reward" class="reward"></div>
+        <h2 id="msgCategoria"></h2>
 
-    <!-- BOTÓN REINICIO -->
-    <button id="restart" class="restart" style="display:none;">
-        🔄 Reiniciar Juego
-    </button>
+        <div class="preguntas">
+ 
+            <h3 id="pregunta"></h3>
+            <p>
+                <div id="alternativas">
 
-</div>
+                </div>
+            </p>
+            <div id="divrpta" class="oculto"> 
+            </div>
+             
+            <p>
+                <button class="btn blue" onclick="siguiente()" >NEXT > </button>
+            </p>
 
-<!-- =========================
-     SCRIPT PRINCIPAL
-========================= -->
-<script src="app.js"></script>
+        </div>
 
+    </div>
+
+    <div id="resultados" class="box oculto">
+
+        <h2>RESULTADOS</h2>
+        <br>
+        <div id="divresultado">
+            
+        </div>
+
+         
+
+        <h3 class="separador" >Jugar Nuevamente</h3>
+        
+        <p>
+            <button class="btn blue" onclick="cargarPreguntasTipo('A')" >PELÍCULAS</button>
+            &nbsp;&nbsp;
+            <button class="btn blue" onclick="cargarPreguntasTipo('B')" >GEOGRAFÍA</button>
+            &nbsp;&nbsp;
+            <button class="btn blue" onclick="cerrarSesion()" >CERRAR SESIÓN</button>
+        </p>
+ 
+
+        
+    </div>
+   
+    
 </body>
+<script src="js/main.js" type="text/javascript"></script>
 </html>
